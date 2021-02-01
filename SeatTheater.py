@@ -13,10 +13,11 @@ class SeatTheater:
     A class to determine an optimal seating arrangement in a theater. 
     """
 
-    def __init__(self, reservation_file, rows=10, cols=20, row_buffer=1, col_buffer=3):
+    def __init__(self, reservation_file, rows=10, cols=20, initial_row=4, row_buffer=1, col_buffer=3):
         """
         Initialize a SeatTheater object with a given reservation_file,
         number of rows (default 10), number of columns (default 20),
+        initial row for customers to be placed in (default 4),
         row buffer (default 1), and column buffer (default 3).
         """
 
@@ -50,7 +51,7 @@ class SeatTheater:
         Convert the number of columns to a list of numbers.
         """
 
-        return [col + 1 for col in range(cols)]
+        return [str(col + 1) for col in range(cols)]
 
     def make_reservation_list(self, reservation_file):
         """
@@ -82,6 +83,25 @@ class SeatTheater:
             return []
 
         return reservations
+    
+    def guest_placement(self):
+        """
+        Returns an ordered list of placements for guests.
+        """
+
+        return [("R001", ["I1", "I2"]), ("R002", ["F16", "F17"])]
+
+    def seat_theater(self, output_file="seating_placement.txt"):
+        """
+        Writes an output file of the theater seating placements.
+        """
+
+        with open(output_file, 'w') as output:
+            for guest_data in self.guest_placement():
+                guest, seats = guest_data
+                seats = ", ".join(seats)
+                output.write(guest + " " + seats + "\n")
+
 
 
 if __name__ == "__main__":
@@ -91,3 +111,4 @@ if __name__ == "__main__":
 
     print(st._row_list)
     print(st._col_list)
+    st.seat_theater()

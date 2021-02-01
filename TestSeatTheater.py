@@ -23,7 +23,8 @@ class TestSeatTheater(unittest.TestCase):
 
         # check row and column lists are ok
         self.assertEqual(self.theater._row_list, ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'])
-        self.assertEqual(self.theater._col_list, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+        self.assertEqual(self.theater._col_list, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', \
+            '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'])
 
         # test too many rows 
         with self.assertRaises(ExcessRowError):
