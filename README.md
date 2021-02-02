@@ -54,4 +54,4 @@ The `SeatTheater` class includes a method to print out a representation of the t
 - Clone this repository to your computer. See [GitHub.com](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) for more details.
 - In a terminal window, change the directory to the theater-seating repository folder. 
 - Type `python SeatTheater.py reservations.txt` to run the program with the example file included in the repository. 
-- Either edit `reservations.txt` as you wish, or create your own file and type `python SeatTheater.py path/to/your/reservations.txt` then hit enter. The output file will be named `seating_placement.txt` and will be created in whatever directory you have your reservations file. 
+- Either edit `reservations.txt` as you wish, or create your own file and type `python SeatTheater.py path/to/your/reservations.txt` then hit enter. The output file will be named `seating_placement.txt` and will be created in the same directory as your reservations file. 
