@@ -28,7 +28,10 @@ class SeatTheater:
         self._col_buffer = col_buffer
         self._reservation_file = reservation_file
 
-        self._seat_list = self.make_seat_list(rows, cols)
+        self._row_list = self.make_row_list(rows)
+        self._col_list = self.make_column_list(cols)
+
+        self._seat_list = self.make_seat_list()
 
         self._reservations = self.make_reservation_list(reservation_file)
 
@@ -56,16 +59,16 @@ class SeatTheater:
 
         return [str(col + 1) for col in range(cols)]
 
-    def make_seat_list(self, rows, cols):
+    def make_seat_list(self):
         """
         Converts the number of rows and columns to a list of 
         seats, starting on the initial row and skipping every other row.
         """
 
-        row_list = self.make_row_list(rows)
-        col_list = self.make_column_list(cols)
+        row_list = self._row_list
+        col_list = self._col_list
 
-        # get rows, skipping _row_buffer number of rows
+        # get rows, starting at _initial_row and skipping _row_buffer number of rows
         seating_rows = [x for i,x in list(enumerate(row_list))[self._initial_row:] if not (i - self._initial_row) % (self._row_buffer + 1)]
 
         extra_rows = [x for i,x in reversed(list(enumerate(row_list))[:self._initial_row]) if not (i - self._initial_row) % (self._row_buffer + 1)]
@@ -114,7 +117,7 @@ class SeatTheater:
     
     def guest_placement(self):
         """
-        Returns an ordered list of placements for guests.
+        Returns an ordered list of placements for guests. 
         """
 
         placement_list = []
@@ -130,6 +133,38 @@ class SeatTheater:
             placement_list.append((name, seats))
 
         return placement_list
+
+    def get_occupied_seats(self):
+        "Returns a dictionary of the currently occupied seats."
+
+        placement_list = self.guest_placement()
+        occupied_seats = {}
+
+        for placement in placement_list:
+            name, seats = placement
+            for seat in seats:
+                occupied_seats[seat] = name
+
+        return occupied_seats
+
+
+    def print_placement(self):
+        "Prints a representation of the guests' locations in the theater."
+
+        occupied_seats = self.get_occupied_seats()
+
+        # draw the theater
+        for row in self._row_list:
+            for column in self._col_list:
+                seat = row + column
+                if seat in occupied_seats:
+                    print(" " + occupied_seats[seat] + " ", end="")
+                elif int(column) < 10:
+                    print(" " + row + column + "   ", end="")
+                else:
+                    print(" " + row + column + "  ", end="")
+            print()
+
 
     def seat_theater(self):
         """
@@ -152,7 +187,6 @@ if __name__ == "__main__":
 
     # get the command-line passed filename 
     reservation_file = sys.argv[1]
-    # reservation_file = "reservations.txt"
 
     st = SeatTheater(reservation_file)
 
