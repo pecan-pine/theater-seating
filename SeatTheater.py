@@ -13,17 +13,17 @@ class SeatTheater:
     A class to determine an optimal seating arrangement in a theater. 
     """
 
-    def __init__(self, reservation_file, rows=10, cols=20, initial_row=4, row_buffer=1, col_buffer=3):
+    def __init__(self, reservation_file, rows=10, cols=20, initial_row=1, row_buffer=1, col_buffer=3):
         """
         Initialize a SeatTheater object with a given reservation_file,
         number of rows (default 10), number of columns (default 20),
-        initial row for customers to be placed in (default 4),
+        initial row for customers to be placed in (default 1),
         row buffer (default 1), and column buffer (default 3).
         """
 
-        self._row_list = self.make_row_list(rows)
-        self._col_list = self.make_column_list(cols)
+        self._seat_list = self.make_seat_list(rows, cols)
 
+        self._initial_row = initial_row
         self._row_buffer = row_buffer
         self._col_buffer = col_buffer
 
@@ -52,6 +52,27 @@ class SeatTheater:
         """
 
         return [str(col + 1) for col in range(cols)]
+
+    def make_seat_list(self, rows, cols):
+        """
+        Converts the number of rows and columns to a list of 
+        seats, starting on row 1 and skipping every other row.
+        """
+
+        row_list = self.make_row_list(rows)
+        col_list = self.make_column_list(cols)
+
+        # get every other row starting with the first
+        seating_rows = [x for i,x in enumerate(row_list) if not i % 2]
+
+        seat_list = []
+
+        for row in seating_rows:
+            for col in col_list:
+                seat_list.append(row + col)
+
+        return seat_list
+
 
     def make_reservation_list(self, reservation_file):
         """
@@ -89,7 +110,16 @@ class SeatTheater:
         Returns an ordered list of placements for guests.
         """
 
-        return [("R001", ["I1", "I2"]), ("R002", ["F16", "F17"])]
+        placement_list = []
+
+        current_position = 0
+
+        for name, number in self._reservations:
+            seats = self._seat_list[current_position:current_position + number]
+            current_position += number + self._col_buffer
+            placement_list.append((name, seats))
+
+        return placement_list
 
     def seat_theater(self, output_file="seating_placement.txt"):
         """
@@ -109,6 +139,5 @@ if __name__ == "__main__":
 
     print(st._reservations)
 
-    print(st._row_list)
-    print(st._col_list)
+    print(st.guest_placement())
     st.seat_theater()
