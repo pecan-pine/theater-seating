@@ -21,7 +21,7 @@ The left-hand column is the reservation name/id, and the right-hand column lists
 
 The program places at least 3 seats between groups in a row, and fills in every other row in the theater. 
 
-- It assumes most people would like to sit in the 4th row, and would prefer to sit as close as possible to the 4th row (but behind) as a second choice. 
+- It assumes most people would like to sit in the 4th row, and would prefer to sit as close as possible to the 4th row (but behind) as a second choice. After filling up all rows behind the 4th row, it fills in rows in the front starting with the rows furthest back.
 
 - The program assigns seats on a first-come first-served basis.
 
