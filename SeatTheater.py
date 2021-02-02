@@ -15,7 +15,7 @@ class SeatTheater:
     A class to determine an optimal seating arrangement in a theater. 
     """
 
-    def __init__(self, reservation_file, rows=10, cols=20, initial_row=1, row_buffer=1, col_buffer=3):
+    def __init__(self, reservation_file, rows=10, cols=20, initial_row=4, row_buffer=1, col_buffer=3):
         """
         Initialize a SeatTheater object with a given reservation_file,
         number of rows (default 10), number of columns (default 20),
@@ -23,7 +23,7 @@ class SeatTheater:
         row buffer (default 1), and column buffer (default 3).
         """
 
-        self._initial_row = initial_row
+        self._initial_row = initial_row - 1
         self._row_buffer = row_buffer
         self._col_buffer = col_buffer
         self._reservation_file = reservation_file
@@ -59,14 +59,18 @@ class SeatTheater:
     def make_seat_list(self, rows, cols):
         """
         Converts the number of rows and columns to a list of 
-        seats, starting on row 1 and skipping every other row.
+        seats, starting on the initial row and skipping every other row.
         """
 
         row_list = self.make_row_list(rows)
         col_list = self.make_column_list(cols)
 
         # get rows, skipping _row_buffer number of rows
-        seating_rows = [x for i,x in enumerate(row_list) if not i % (self._row_buffer + 1)]
+        seating_rows = [x for i,x in list(enumerate(row_list))[self._initial_row:] if not (i - self._initial_row) % (self._row_buffer + 1)]
+
+        extra_rows = [x for i,x in reversed(list(enumerate(row_list))[:self._initial_row]) if not (i - self._initial_row) % (self._row_buffer + 1)]
+
+        seating_rows = seating_rows + extra_rows
 
         seat_list = []
 
@@ -148,6 +152,7 @@ if __name__ == "__main__":
 
     # get the command-line passed filename 
     reservation_file = sys.argv[1]
+    # reservation_file = "reservations.txt"
 
     st = SeatTheater(reservation_file)
 
