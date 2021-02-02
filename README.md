@@ -5,7 +5,7 @@ A python program that determines a seating chart in a movie theater.
 
 The input for this program is a text reservation file, of the form:
 
-![input](input.png)
+![input](images/input.png)
 
 The left-hand column is the reservation name/id, and the right-hand column is the number of seats requested for that reservation.
 
@@ -13,7 +13,7 @@ The left-hand column is the reservation name/id, and the right-hand column is th
 
 The output for this program is a text seating placement file, of the form:
 
-![output](output.png)
+![output](images/output.png)
 
 The left-hand column is the reservation name/id, and the right-hand column lists the seats reserved. 
 
@@ -36,14 +36,14 @@ The program places at least 3 seats between groups in a row, and fills in every 
 # Graphical Representation
 
 The `SeatTheater` class includes a method to print out a representation of the theater seat placement:
-![seat placment](print_theater.png)
+![seat placment](images/print_theater.png)
 
 # Limitations
 
 - At the moment, there is no way to print the theater seating arrangement to a file. This would not be difficult to implement. 
 - The seating arrangement makes only some attempt to place all reservations of a group in the same row. This could be arranged, but would change the seating algorithm considerably.
 - If there is one group occupying the seats at the end of a row, then the next group (in the next row) will also get shifted over 3 seats (even though they are a row away from the first group). You can see this phenomenon happening in row J in the seating arrangement below:
-![seat placment](print_theater.png)
+![seat placment](images/print_theater.png)
  This would not be too difficult to fix. 
 - At the moment, `print_placement()` is not very efficient. It first loops through all the reservations and all seats reserved in each reservation, then loops through all rows and columns of the theater. Refactoring `guest_placement()` to provide more data could be a fix. So far I've decided to keep `guest_placement()` as efficient as possible, while leaving `print_placement()` not as efficient. 
 - If there are not enough seats to place an entire group, no one in the group is placed, and the reservation shows up as "Not enough seats available." It may be better to place all the possible reservations, even if the entire group doesn't fit. 

@@ -12,9 +12,9 @@ class TestSeatTheater(unittest.TestCase):
     def setUp(self):
         "Example test file"
 
-        self.test_file = "test_reservations.txt"
+        self.test_file = "test_files/test_reservations.txt"
         self.theater = SeatTheater(self.test_file)
-        self.bad_test_file = "bad_reservations.txt"
+        self.bad_test_file = "test_files/bad_reservations.txt"
 
     def test_init(self):
         """
