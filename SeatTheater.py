@@ -1,6 +1,8 @@
 # A theater-seating program by Nathan Taylor
 # Last updated 2/1/2021
 
+import sys, os
+
 class ExcessRowError(Exception):
     """
     An exception raised when there are too many rows (more than 26). 
@@ -21,11 +23,12 @@ class SeatTheater:
         row buffer (default 1), and column buffer (default 3).
         """
 
-        self._seat_list = self.make_seat_list(rows, cols)
-
         self._initial_row = initial_row
         self._row_buffer = row_buffer
         self._col_buffer = col_buffer
+        self._reservation_file = reservation_file
+
+        self._seat_list = self.make_seat_list(rows, cols)
 
         self._reservations = self.make_reservation_list(reservation_file)
 
@@ -62,8 +65,8 @@ class SeatTheater:
         row_list = self.make_row_list(rows)
         col_list = self.make_column_list(cols)
 
-        # get every other row starting with the first
-        seating_rows = [x for i,x in enumerate(row_list) if not i % 2]
+        # get rows, skipping _row_buffer number of rows
+        seating_rows = [x for i,x in enumerate(row_list) if not i % (self._row_buffer + 1)]
 
         seat_list = []
 
@@ -115,16 +118,25 @@ class SeatTheater:
         current_position = 0
 
         for name, number in self._reservations:
-            seats = self._seat_list[current_position:current_position + number]
-            current_position += number + self._col_buffer
+            if current_position + number < len(self._seat_list):
+                seats = self._seat_list[current_position:current_position + number]
+                current_position += number + self._col_buffer
+            else:
+                seats = ["Not enough seats available."]
             placement_list.append((name, seats))
 
         return placement_list
 
-    def seat_theater(self, output_file="seating_placement.txt"):
+    def seat_theater(self):
         """
         Writes an output file of the theater seating placements.
+        The output file is written to the same directory as 
+        the reservation_file is located.
         """
+
+        # the output directory is the same as for _reservation file
+        output_dir = os.path.dirname(os.path.abspath(self._reservation_file))
+        output_file = os.path.join(output_dir, "seating_placement.txt")
 
         with open(output_file, 'w') as output:
             for guest_data in self.guest_placement():
@@ -132,12 +144,11 @@ class SeatTheater:
                 seats = ", ".join(seats)
                 output.write(guest + " " + seats + "\n")
 
-
-
 if __name__ == "__main__":
-    st = SeatTheater("reservations.txt")
 
-    print(st._reservations)
+    # get the command-line passed filename 
+    reservation_file = sys.argv[1]
 
-    print(st.guest_placement())
+    st = SeatTheater(reservation_file)
+
     st.seat_theater()
